@@ -9,6 +9,8 @@ ROBMS is a full-stack restaurant management application built for local developm
 
 This project is designed to be easy to run on a local machine using the built-in H2 database and the Spring Boot/Next.js development servers.
 
+<!-- Trigger redeploy -->
+
 ## What the Project Does
 
 - Displays a restaurant floor map with table status.
