@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
-export default function MenuPage() {
+function MenuContent() {
   const searchParams = useSearchParams();
   const [menu, setMenu] = useState<any[]>([]);
   const [cart, setCart] = useState<any[]>([]);
@@ -108,7 +108,7 @@ export default function MenuPage() {
   const total = cart.reduce((sum, item) => sum + (item.priceAtOrderTime * item.quantity), 0);
 
   return (
-    <div className="min-h-screen bg-background p-8 flex gap-8">
+    <div className="min-h-screen bg-background p-8 flex gap-8" suppressHydrationWarning>
       <div className="flex-1">
         <h1 className="text-3xl font-bold text-white mb-8">Digital Menu</h1>
 
@@ -176,5 +176,13 @@ export default function MenuPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function MenuPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center text-white">Loading menu...</div>}>
+      <MenuContent />
+    </Suspense>
   );
 }
