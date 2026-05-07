@@ -1,5 +1,7 @@
 'use client';
 
+// ROBMS Dashboard - Restaurant Management System
+
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Armchair, RefreshCw, Users, Utensils, WalletCards } from 'lucide-react';
