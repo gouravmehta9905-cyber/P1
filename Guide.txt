@@ -1,0 +1,141 @@
+# ROBMS - Project Documentation Guide
+
+ROBMS is a restaurant order and billing management system built as a simple local development project. It connects a Next.js web frontend with a Spring Boot backend and uses real-time messaging for updates.
+
+## 1. Architecture Overview
+
+The application uses a two-tier architecture:
+- **Frontend**: A Next.js application that displays the restaurant floor, menu, kitchen display, and billing UI.
+- **Backend**: A Spring Boot service that handles orders, menu data, table status, and WebSocket broadcasting.
+- **Data**: H2 in-memory database used by default for development, seeded at startup.
+
+This setup is monolithic in the sense that frontend and backend are separate applications in the same repository, but they are not deployed as a single package.
+
+## 2. Directory Structure
+
+### `/backend`
+This is the Java application.
+- `src/main/java/com/robms/`
+  - `config/`
+    - `CorsConfig.java` — configures cross-origin requests.
+    - `DataInitializer.java` — seeds menu items and table records when the app starts.
+    - `SecurityConfig.java` — configures Spring Security and request handling.
+    - `WebSocketConfig.java` — configures STOMP over WebSocket and the message broker.
+  - `controller/`
+    - `BillingController.java` — handles billed order retrieval.
+    - `MenuController.java` — exposes menu item APIs.
+    - `OrderController.java` — creates orders, updates order status, and exposes order-related APIs.
+    - `TableController.java` — handles table data and status.
+  - `model/`
+    - `MenuItem.java` — menu item entity.
+    - `Order.java` — order entity with table association.
+    - `OrderItem.java` — order item entity included in orders.
+    - `TableEntity.java` — table entity representing floor tables.
+  - `repository/`
+    - `MenuItemRepository.java`
+    - `OrderRepository.java`
+    - `TableRepository.java`
+- `src/main/resources/application.properties`
+  - Default database: H2 in-memory.
+  - Server port: `8080`.
+  - H2 console enabled for debugging.
+
+### `/frontend`
+This is the Next.js app.
+- `src/app/`
+  - `page.tsx` — main app landing page.
+  - `dashboard/page.tsx` — floor map view and table handling.
+  - `menu/page.tsx` — digital menu and order creation.
+  - `kds/page.tsx` — kitchen display system for order progress.
+  - `billing/page.tsx` — billed order view and payment completion.
+  - `layout.tsx` — shared page layout and global styles.
+
+The frontend is intentionally simple and keeps logic in page components. It uses Axios to call the backend and STOMP for live updates.
+
+## 3. Real-Time Communication
+
+The app uses STOMP over SockJS for real-time events.
+- WebSocket endpoint is configured in `WebSocketConfig.java`.
+- The frontend connects via SockJS and subscribes to topics for live updates.
+- Real-time updates are used for:
+  - Table status changes
+  - New orders
+  - Order status updates
+  - Billing state changes
+
+## 4. Data and Workflow
+
+### Menu
+- Menu items are seeded on backend startup.
+- The frontend fetches available menu items from the backend.
+- Clicking a table on the floor map opens the menu for that table.
+
+### Orders
+- Orders are created in the backend and linked to a table.
+- The backend stores the order plus order items.
+- Order status is visible in the kitchen display and on the floor map.
+
+### Billing
+- When an order becomes billed, that status is visible in the dashboard.
+- The billed page shows orders ready for payment or review.
+
+### Tables
+- Tables are initialized and stored in the H2 database.
+- Each table can be available, occupied, or billed depending on order state.
+- Selecting a table begins the ordering flow.
+
+## 5. Running the App
+
+### Backend
+Run from the `backend` folder:
+```bash
+cd backend
+.\mvnw.cmd spring-boot:run
+```
+The backend will be available on `http://localhost:8080`.
+
+### Frontend
+Run from the `frontend` folder:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Open the URL shown in the terminal. If port 3000 is busy, Next.js will fall back to another free port.
+
+## 6. Database Notes
+
+- The current default database is H2 in-memory.
+- This means data is temporary and is reset when the backend restarts.
+- The `docker-compose.yml` file provides a PostgreSQL and Redis stack, but it is not required to run the current local development setup.
+
+If you want to use PostgreSQL instead of H2, update `application.properties` with PostgreSQL connection settings and run `docker-compose up -d`.
+
+## 7. Useful Files
+
+- `docker-compose.yml` — optional PostgreSQL and Redis containers.
+- `frontend/package.json` — frontend dependencies and scripts.
+- `backend/pom.xml` — backend dependencies and build configuration.
+- `backend/src/main/java/com/robms/config/DataInitializer.java` — seeds the menu and tables.
+- `backend/src/main/java/com/robms/config/WebSocketConfig.java` — socket configuration.
+
+## 8. How to Explore the Code
+
+- Start with `frontend/src/app/dashboard/page.tsx` to understand how table selection works.
+- Open `frontend/src/app/menu/page.tsx` to see how orders are built and submitted.
+- Inspect `backend/src/main/java/com/robms/controller/OrderController.java` to follow order creation and updates.
+- Check `backend/src/main/resources/application.properties` to see the current database and server settings.
+
+## 9. Common Issues
+
+- If the frontend does not show updated menu items, refresh the browser and verify the backend is running.
+- If the backend does not start, rebuild with:
+  ```bash
+  cd backend
+  .\mvnw.cmd clean package
+  ```
+- If the H2 console is not available, ensure the backend is running and open `http://localhost:8080/h2-console`.
+
+## 10. Summary
+
+This project is a working restaurant management demo with a simple local backend and a modern React UI. It is meant for development, testing, and learning how a POS/KDS app can work in real time.

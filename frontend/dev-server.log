@@ -1,0 +1,44 @@
+
+> frontend@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.3
+  - Local:        http://localhost:3001
+
+ ✓ Starting...
+ ✓ Ready in 3.8s
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 3.3s (659 modules)
+ GET /dashboard 200 in 3531ms
+ ✓ Compiled in 203ms (293 modules)
+ GET /dashboard 200 in 68ms
+ ○ Compiling /menu ...
+ ✓ Compiled /menu in 893ms (642 modules)
+ GET /menu 200 in 1079ms
+ ○ Compiling /kds ...
+ ✓ Compiled /kds in 1575ms (820 modules)
+ GET /kds 200 in 1732ms
+ ✓ Compiled in 724ms (715 modules)
+ ✓ Compiled in 180ms (358 modules)
+ ✓ Compiled in 127ms (701 modules)
+ ✓ Compiled in 1044ms (356 modules)
+ ✓ Compiled in 404ms (342 modules)
+ ✓ Compiled in 760ms (356 modules)
+ ✓ Compiled in 168ms (356 modules)
+ ✓ Compiled in 264ms (356 modules)
+ ✓ Compiled in 150ms (356 modules)
+ ✓ Compiled in 154ms (356 modules)
+ ✓ Compiled in 182ms (356 modules)
+ ✓ Compiled in 174ms (356 modules)
+ ✓ Compiled in 400ms (357 modules)
+ ✓ Compiled in 172ms (357 modules)
+ ✓ Compiled in 161ms (357 modules)
+ ✓ Compiled in 312ms (357 modules)
+ ✓ Compiled in 124ms (357 modules)
+ ✓ Compiled in 180ms (357 modules)
+ ✓ Compiled in 166ms (357 modules)
+ ✓ Compiled in 123ms (357 modules)
+ ✓ Compiled in 151ms (357 modules)
+ ✓ Compiled in 215ms (357 modules)
+ ✓ Compiled in 175ms (357 modules)
+ ✓ Compiled in 125ms (357 modules)
