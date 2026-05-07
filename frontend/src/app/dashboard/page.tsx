@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+
 const MOCK_TABLES = [
   { id: 1, name: 'Table 1', status: 'occupied', capacity: 4, amount: 'Rs 124.50' },
   { id: 2, name: 'Table 2', status: 'available', capacity: 2, amount: 'Rs 0.00' },
@@ -32,7 +34,7 @@ export default function DashboardPage() {
   const fetchTables = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8080/api/tables');
+      const response = await axios.get(`${API_BASE}/api/tables`);
       if (response.data && response.data.length > 0) {
         setTables(response.data);
         setIsLive(true);
@@ -51,7 +53,7 @@ export default function DashboardPage() {
 
   const fetchOrders = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/orders/active');
+      const response = await axios.get(`${API_BASE}/api/orders/active`);
       setOrders(response.data || []);
     } catch (error) {
       console.warn('Failed to fetch orders');
@@ -71,7 +73,7 @@ export default function DashboardPage() {
   const handleBilledTableClick = async (table: any) => {
     setSelectedBilledTable(table);
     try {
-      const response = await axios.get(`http://localhost:8080/api/orders/table/${table.id}/ready`);
+      const response = await axios.get(`${API_BASE}/api/orders/table/${table.id}/ready`);
       setBilledOrder(response.data);
       setShowBillingModal(true);
     } catch (error) {
@@ -83,7 +85,7 @@ export default function DashboardPage() {
     if (!billedOrder) return;
     setIsSettlingBill(true);
     try {
-      await axios.put(`http://localhost:8080/api/orders/${billedOrder.id}/status?status=billed`);
+      await axios.put(`${API_BASE}/api/orders/${billedOrder.id}/status?status=billed`);
       setShowBillingModal(false);
       setSelectedBilledTable(null);
       setBilledOrder(null);
@@ -100,7 +102,7 @@ export default function DashboardPage() {
     fetchOrders();
 
     // WebSocket for real-time order updates
-    const socket = new SockJS('http://localhost:8080/ws');
+    const socket = new SockJS(`${API_BASE}/ws`);
     const client = new Client({
       webSocketFactory: () => socket,
       reconnectDelay: 5000,

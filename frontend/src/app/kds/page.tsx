@@ -5,6 +5,8 @@ import axios from 'axios';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+
 export default function KitchenDisplaySystem() {
   const [orders, setOrders] = useState<any[]>([]);
   const [isConnected, setIsConnected] = useState(false);
@@ -12,7 +14,7 @@ export default function KitchenDisplaySystem() {
 
   const fetchActiveOrders = async () => {
     try {
-      const res = await axios.get('http://localhost:8080/api/orders/active');
+      const res = await axios.get(`${API_BASE}/api/orders/active`);
       setOrders(res.data);
     } catch (err) {
       console.warn("Backend offline, using empty state");
@@ -22,7 +24,7 @@ export default function KitchenDisplaySystem() {
   useEffect(() => {
     fetchActiveOrders();
 
-    const socket = new SockJS('http://localhost:8080/ws');
+    const socket = new SockJS(`${API_BASE}/ws`);
     const client = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log(str),
@@ -65,7 +67,7 @@ export default function KitchenDisplaySystem() {
 
   const updateStatus = async (id: number, newStatus: string) => {
     try {
-      await axios.put(`http://localhost:8080/api/orders/${id}/status?status=${newStatus}`);
+      await axios.put(`${API_BASE}/api/orders/${id}/status?status=${newStatus}`);
     } catch (err) {
       console.error("Failed to update status", err);
       // Optimistic update if backend is off

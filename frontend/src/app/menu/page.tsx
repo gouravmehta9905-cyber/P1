@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation';
 
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+
 export default function MenuPage() {
   const searchParams = useSearchParams();
   const [menu, setMenu] = useState<any[]>([]);
@@ -18,7 +20,7 @@ export default function MenuPage() {
       setTableId(Number(paramTableId));
     }
 
-    axios.get('http://localhost:8080/api/menu/available')
+    axios.get(`${API_BASE}/api/menu/available`)
       .then(res => setMenu(res.data))
       .catch(() => {
         setMenu([
@@ -47,7 +49,7 @@ export default function MenuPage() {
         ]);
       });
 
-    axios.get('http://localhost:8080/api/tables')
+    axios.get(`${API_BASE}/api/tables`)
       .then(res => {
         if (res.data && res.data.length > 0) {
           setTables(res.data);
@@ -93,7 +95,7 @@ export default function MenuPage() {
     };
 
     try {
-      await axios.post('http://localhost:8080/api/orders', payload);
+      await axios.post(`${API_BASE}/api/orders`, payload);
       setCart([]);
       alert('Order sent to kitchen!');
     } catch (err) {

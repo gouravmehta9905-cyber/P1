@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+
 export default function BillingPage() {
   const [tableId, setTableId] = useState<number>(1);
   const [bill, setBill] = useState<any>(null);
@@ -11,7 +13,7 @@ export default function BillingPage() {
   const fetchBill = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`http://localhost:8080/api/billing/table/${tableId}`);
+      const res = await axios.get(`${API_BASE}/api/billing/table/${tableId}`);
       setBill(res.data);
     } catch (err) {
       alert("No active unbilled orders found for this table, or backend is offline.");
@@ -23,7 +25,7 @@ export default function BillingPage() {
 
   const processPayment = async () => {
     try {
-      await axios.post(`http://localhost:8080/api/billing/checkout/${tableId}`);
+      await axios.post(`${API_BASE}/api/billing/checkout/${tableId}`);
       alert("Payment processed! Table cleared.");
       setBill(null);
     } catch (err) {
