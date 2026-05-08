@@ -9,13 +9,3 @@ services:
     envVars:
       - key: JAVA_VERSION
         value: "17"
-  - type: static_site
-    name: robms-frontend
-    env: static
-    branch: main
-    root: frontend
-    buildCommand: npm install && npm run build
-    publishPath: out
-    envVars:
-      - key: NEXT_PUBLIC_BACKEND_URL
-        value: "https://<your-backend-service>.onrender.com"
