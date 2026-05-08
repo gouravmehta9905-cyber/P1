@@ -1,0 +1,21 @@
+services:
+  - type: web_service
+    name: robms-backend
+    env: java
+    branch: main
+    root: backend
+    buildCommand: ./mvnw clean package
+    startCommand: java -jar target/backend-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: JAVA_VERSION
+        value: "17"
+  - type: static_site
+    name: robms-frontend
+    env: static
+    branch: main
+    root: frontend
+    buildCommand: npm install && npm run build
+    publishPath: out
+    envVars:
+      - key: NEXT_PUBLIC_BACKEND_URL
+        value: "https://<your-backend-service>.onrender.com"

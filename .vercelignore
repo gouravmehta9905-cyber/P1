@@ -1,0 +1,13 @@
+# Ignore generated build artifacts and large backend files
+backend/target
+backend/.mvn
+frontend/node_modules
+**/node_modules
+out
+**/.vercel
+.vscode
+.git
+.gitignore
+README.md
+Dockerfile
+docker-compose.yml

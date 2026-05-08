@@ -2,12 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useSearchParams } from 'next/navigation';
 
 const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
 export default function MenuPage() {
-  const searchParams = useSearchParams();
   const [menu, setMenu] = useState<any[]>([]);
   const [cart, setCart] = useState<any[]>([]);
   const [tables, setTables] = useState<any[]>([]);
@@ -15,7 +13,11 @@ export default function MenuPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    const paramTableId = searchParams.get('tableId');
+    let paramTableId: string | null = null;
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      paramTableId = params.get('tableId');
+    }
     if (paramTableId) {
       setTableId(Number(paramTableId));
     }
@@ -66,14 +68,14 @@ export default function MenuPage() {
           name: `Table ${idx + 1}`,
           status: 'available',
         }));
-        setTables(fallbackTables);
+          setTables(fallbackTables);
         if (paramTableId) {
           setTableId(Number(paramTableId));
         } else {
           setTableId(1);
         }
       });
-  }, [searchParams]);
+  }, []);
 
   const addToCart = (item: any) => {
     setCart(prev => {
