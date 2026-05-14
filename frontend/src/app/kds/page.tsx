@@ -5,7 +5,11 @@ import axios from 'axios';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+if (typeof window !== 'undefined') {
+  (window as any).global = window;
+}
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
 export default function KitchenDisplaySystem() {
   const [orders, setOrders] = useState<any[]>([]);

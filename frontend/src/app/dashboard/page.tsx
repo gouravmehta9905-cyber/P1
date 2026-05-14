@@ -9,7 +9,11 @@ import { useRouter } from 'next/navigation';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
-const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+if (typeof window !== 'undefined') {
+  (window as any).global = window;
+}
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 
 const MOCK_TABLES = [
   { id: 1, name: 'Table 1', status: 'occupied', capacity: 4, amount: 'Rs 124.50' },
